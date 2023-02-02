@@ -2,7 +2,7 @@
 
 from serial.tools import list_ports
 from rd6006 import RD6006
-
+import time
 
 def print_info(rd60xx):
     reg = rd60xx._read_registers(0,4)
@@ -15,7 +15,7 @@ def print_status(rd60xx):
     print(f"[OUTPUT]  {'ON' if bool(reg[10]) else 'OFF'}")
 
 def separater():
-    print("----------------------------------------")
+    print("--------------------------------------------------")
 
 if __name__ == "__main__":
     ports = list_ports.comports()
@@ -36,4 +36,54 @@ if __name__ == "__main__":
     print_status(rd60xx)
     separater()
 
-
+    while True:
+        try:
+            print("[o]:OUTPUT [v]:V-SET [i]:I-SET [r]:reload [q]:exit")
+            key = input(">>")
+            if key == "q":
+                print("Exit processing...")
+                rd60xx.enable = False
+                exit(0)
+            elif key == "r":
+                separater()
+                print_status(rd60xx)
+                separater()
+            elif key == "v" or key == "i":
+                while True:
+                    print("[number]:set [c]:cancel")
+                    num = input(">>")
+                    if num == "c":
+                        separater()
+                        print_status(rd60xx)
+                        separater()
+                        break
+                    try:
+                        if key == "v":
+                            rd60xx.voltage = float(num)
+                        else:
+                            rd60xx.current = float(num)
+                            separater()
+                            print_status(rd60xx)
+                            separater()
+                        break
+                    except Exception as e:
+                        print("Error: Only numbers or 'c'.")
+            elif key == "o":
+                rd60xx.enable = False if rd60xx.enable else True
+                time.sleep(0.5)
+                separater()
+                print_status(rd60xx)
+                separater()
+            elif key == "":
+                separater()
+                print_status(rd60xx)
+                separater()
+            else:
+                print("Error: Only 'o','v','i','r','q'.")
+                separater()
+                print_status(rd60xx)
+                separater()
+        except BaseException:
+            print("\nExit processing...")
+            rd60xx.enable = False
+            exit(0)
