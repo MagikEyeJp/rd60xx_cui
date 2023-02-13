@@ -41,8 +41,8 @@ if __name__ == "__main__":
             print("[o]:OUTPUT [v]:V-SET [i]:I-SET [r]:reload [q]:exit")
             key = input(">>")
             if key == "q":
-                print("Exit processing...")
-                rd60xx.enable = False
+#                print("Exit processing...")
+#                rd60xx.enable = False
                 exit(0)
             elif key == "r":
                 separater()
@@ -62,9 +62,9 @@ if __name__ == "__main__":
                             rd60xx.voltage = float(num)
                         else:
                             rd60xx.current = float(num)
-                            separater()
-                            print_status(rd60xx)
-                            separater()
+                        separater()
+                        print_status(rd60xx)
+                        separater()
                         break
                     except Exception as e:
                         print("Error: Only numbers or 'c'.")
